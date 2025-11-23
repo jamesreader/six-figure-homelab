@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: dashboard
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: securepass123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dashboard-net
+
+  backend:
+    build: ./backend
+    environment:
+      DB_HOST: postgres
+      DB_NAME: dashboard
+      DB_USER: dbuser
+      DB_PASSWORD: securepass123
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    networks:
+      - dashboard-net
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - dashboard-net
+
+networks:
+  dashboard-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

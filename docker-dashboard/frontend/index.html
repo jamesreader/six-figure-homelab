@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 50px auto; }
+        .stat { background: #f0f0f0; padding: 20px; border-radius: 8px; }
+        button { padding: 10px 20px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Docker Dashboard</h1>
+    <div class="stat">
+        <h2>Total Visits: <span id="visits">Loading...</span></h2>
+    </div>
+    <button onclick="recordVisit()">Record Visit</button>
+
+    <script>
+        const API_URL = 'http://192.168.2.30:5000';
+        
+        async function getVisits() {
+            const res = await fetch(`${API_URL}/api/visits`);
+            const data = await res.json();
+            document.getElementById('visits').textContent = data.total_visits;
+        }
+        
+        async function recordVisit() {
+            await fetch(`${API_URL}/api/visits`, { method: 'POST' });
+            getVisits();
+        }
+        
+        getVisits();
+        setInterval(getVisits, 5000);
+    </script>
+</body>
+</html>

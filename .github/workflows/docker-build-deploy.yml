@@ -1,0 +1,54 @@
+name: Docker Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docker-dashboard/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker-dashboard/frontend
+          push: true
+          tags: |
+            jasmesreader/dashboard-frontend:latest
+            jasmesreader/dashboard-frontend:${{ github.sha }}
+      
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker-dashboard/backend
+          push: true
+          tags: |
+            jasmesreader/dashboard-backend:latest
+            jasmesreader/dashboard-backend:${{ github.sha }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy notification
+        run: |
+          echo "Images built successfully!"
+          echo "Frontend: jasmesreader/dashboard-frontend:latest"
+          echo "Backend: jasmesreader/dashboard-backend:latest"

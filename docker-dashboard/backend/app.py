@@ -8,11 +8,16 @@ app = Flask(__name__)
 CORS(app)
 
 #Environment variables for DB connection
+from urllib.parse import urlparse
+
+database_url = os.getenv('DATABASE_URL', 'postgresql://dashuser:dashpass@localhost:5432/dashboard')
+url = urlparse(database_url)
+
 DB_CONFIG = {
-	'host': os.getenv('DB_HOST', 'localhost'),
-	'database': os.getenv('DB_NAME', 'dashbaord'),
-	'user': os.getenv('DB_USER', 'postgres'),
-	'password': os.getenv('DB_PASSWORD', 'postgres')
+    'host': url.hostname,
+    'database': url.path[1:],
+    'user': url.username,
+    'password': url.password
 }
 
 def get_db():

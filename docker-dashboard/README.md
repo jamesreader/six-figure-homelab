@@ -72,3 +72,4 @@ docker-dashboard/
 - Enhanced UI with data visualization
 - Deploy to Kubernetes cluster
 - CI/CD pipeline with GitHub Actions
+# Dashboard Project

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: dashboard
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: jasmesreader/dashboard-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DATABASE_URL
+          value: postgresql://dashboard_user:dashboard_pass@postgres:5432/dashboard_db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: dashboard
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 5000
+    targetPort: 5000
+  type: ClusterIP

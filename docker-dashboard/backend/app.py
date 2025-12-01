@@ -82,8 +82,6 @@ def update_progress():
 		cur = conn.cursor()
 
 		cur.execute('''
-			if __name__ == '__main__':
-			app.run(host='0.0.0.0', port=5000)
 			INSERT INTO roadmap_progress (task_key, completed, updated_at)
 			VALUES (%s, %s, CURRENT_TIMESTAMP)
 			ON CONFLICT (task_key)

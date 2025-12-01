@@ -68,7 +68,7 @@ def get_progress():
 	except Exception as e:
 		return jsonify({'error': str(e)}), 500
 
-@app.route('/api/tracker/progress', methods=['POST']
+@app.route('/api/tracker/progress', methods=['POST'])
 def update_progress():
 	try:
 		data = request.get_json()

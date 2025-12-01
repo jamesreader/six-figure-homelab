@@ -63,7 +63,7 @@ def get_progress():
 		cur.close()
 		conn.close()
 
-		progress = [row[0]: row[1] for row in rows}
+		progress = {row[0]: row[1] for row in rows}
 		return jsonify(progress), 200
 	except Exception as e:
 		return jsonify({'error': str(e)}), 500

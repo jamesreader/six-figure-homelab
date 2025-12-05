@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Mastery Roadmap Tracker v2</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Archivo:wght@300;600;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a1f35;
+      --accent-primary: #00ff88;
+      --accent-secondary: #0099ff;
+      --text-primary: #e5e7eb;
+      --text-secondary: #9ca3af;
+      --border: #2d3748;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(0, 153, 255, 0.05) 0%, transparent 40%);
+      min-height: 100vh;
+    }
+
+    .app-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .header {
+      text-align: center;
+      padding: 3rem 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    h1 {
+      font-family: 'Archivo', sans-serif;
+      font-size: 3rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      animation: fadeInDown 0.6s ease-out;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      animation: fadeIn 0.6s ease-out 0.2s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .progress-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      animation: fadeInUp 0.6s ease-out 0.3s both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-primary);
+    }
+
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      font-family: 'Archivo', sans-serif;
+    }
+
+    .stat-label {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      animation: fadeIn 0.6s ease-out 0.4s both;
+    }
+
+    button {
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.75rem 1.5rem;
+      border: 2px solid var(--accent-primary);
+      background: transparent;
+      color: var(--accent-primary);
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--accent-primary);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+
+    button:hover::before {
+      left: 0;
+    }
+
+    button:hover {
+      color: var(--bg-primary);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button.secondary {
+      border-color: var(--text-secondary);
+      color: var(--text-secondary);
+    }
+
+    button.secondary::before {
+      background: var(--text-secondary);
+    }
+
+    .phase {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.6s ease-out both;
+    }
+
+    .phase:nth-child(1) { animation-delay: 0.5s; }
+    .phase:nth-child(2) { animation-delay: 0.6s; }
+    .phase:nth-child(3) { animation-delay: 0.7s; }
+    .phase:nth-child(4) { animation-delay: 0.8s; }
+
+    .phase-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .phase-title {
+      font-family: 'Archivo', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .phase-progress {
+      font-size: 1.25rem;
+      color: var(--accent-secondary);
+      font-weight: 700;
+    }
+
+    .week {
+      margin-bottom: 1.5rem;
+    }
+
+    .week-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      padding: 1rem;
+      background: var(--bg-card);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+
+    .week-header:hover {
+      border-color: var(--accent-primary);
+      background: rgba(0, 255, 136, 0.05);
+    }
+
+    .week-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      flex: 1;
+      color: var(--text-primary);
+    }
+
+    .expand-icon {
+      font-size: 1.5rem;
+      color: var(--accent-primary);
+      transition: transform 0.3s ease;
+    }
+
+    .expand-icon.expanded {
+      transform: rotate(90deg);
+    }
+
+    .week-content {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    .task {
+      margin-bottom: 0.75rem;
+    }
+
+    .task-main {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-card);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+
+    .task-main:hover {
+      border-color: var(--accent-primary);
+      transform: translateX(4px);
+    }
+
+    .task-checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--accent-primary);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      margin-top: 0.2rem;
+    }
+
+    .task-checkbox:hover {
+      background: rgba(0, 255, 136, 0.1);
+    }
+
+    .task-checkbox.completed {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+
+    .task-checkbox.completed::after {
+      content: '✓';
+      color: var(--bg-primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .task-checkbox.partial {
+      background: var(--warning);
+      border-color: var(--warning);
+    }
+
+    .task-checkbox.partial::after {
+      content: '▶';
+      color: var(--bg-primary);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .task-content {
+      flex: 1;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .task-text {
+      flex: 1;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .task.completed .task-text {
+      color: var(--text-secondary);
+      text-decoration: line-through;
+    }
+
+    .task-expand-icon {
+      font-size: 1rem;
+      color: var(--accent-secondary);
+      transition: transform 0.3s ease;
+    }
+
+    .task-expand-icon.expanded {
+      transform: rotate(90deg);
+    }
+
+    .task-progress {
+      font-size: 0.85rem;
+      color: var(--accent-secondary);
+      margin-left: 0.5rem;
+    }
+
+    .subtasks {
+      margin-top: 0.75rem;
+      padding-left: 2.5rem;
+    }
+
+    .subtask {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .subtask:hover {
+      border-color: var(--accent-secondary);
+      transform: translateX(4px);
+    }
+
+    .subtask-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--accent-secondary);
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      margin-top: 0.15rem;
+    }
+
+    .subtask-checkbox:hover {
+      background: rgba(0, 153, 255, 0.1);
+    }
+
+    .subtask-checkbox.completed {
+      background: var(--accent-secondary);
+      border-color: var(--accent-secondary);
+    }
+
+    .subtask-checkbox.completed::after {
+      content: '✓';
+      color: var(--bg-primary);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .subtask-text {
+      flex: 1;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .subtask.completed .subtask-text {
+      color: var(--text-secondary);
+      text-decoration: line-through;
+    }
+
+    .resources {
+      margin-top: 1rem;
+      padding-left: 3rem;
+    }
+
+    .resource-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: rgba(0, 153, 255, 0.1);
+      border-left: 3px solid var(--accent-secondary);
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .resource-icon {
+      color: var(--accent-secondary);
+      font-weight: 700;
+    }
+
+    .prompt-text {
+      font-style: italic;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    a {
+      color: var(--accent-secondary);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border-bottom: 1px solid transparent;
+    }
+
+    a:hover {
+      color: var(--accent-primary);
+      border-bottom-color: var(--accent-primary);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-label {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border: 2px solid var(--accent-secondary);
+      color: var(--accent-secondary);
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .file-label::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--accent-secondary);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+
+    .file-label:hover::before {
+      left: 0;
+    }
+
+    .file-label:hover {
+      color: var(--bg-primary);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-card);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      transition: width 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: progressShine 2s infinite;
+    }
+
+    @keyframes progressShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 1rem 1.5rem;
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      border-radius: 8px;
+      font-weight: 700;
+      animation: slideIn 0.3s ease-out;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0, 255, 136, 0.3);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .controls {
+        flex-direction: column;
+      }
+
+      button, .file-label {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const roadmapData = {
+      phases: [
+        {
+          id: 1,
+          title: "Phase 1: Foundation (Months 1-2)",
+          weeks: [
+            {
+              id: 1,
+              title: "Week 1-2: Linux & Virtualization Setup",
+              tasks: [
+                { text: "Set up Ubuntu Server 24.04 VMs in Hyper-V (start with 3 VMs)", subtasks: [] },
+                { text: "Practice Linux command line basics, file permissions, user management", subtasks: [] },
+                { text: "Configure SSH between VMs, set up key-based authentication", subtasks: [] },
+                { text: "Document everything in GitHub", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Walk me through setting up 3 Ubuntu Server VMs in Hyper-V with SSH key authentication between them" },
+                { type: "prompt", text: "Teach me essential Linux commands for system administration - give me practice exercises" }
+              ]
+            },
+            {
+              id: 2,
+              title: "Week 3-4: Docker Fundamentals",
+              tasks: [
+                { text: "Install Docker on Ubuntu VMs", subtasks: [] },
+                { text: "Run existing containers (nginx, postgres, redis)", subtasks: [] },
+                { text: "Write your first Dockerfile and docker-compose.yml", subtasks: [] },
+                { text: "Build a simple multi-container application", subtasks: [] },
+                { 
+                  text: "Docker Deep Dive", 
+                  subtasks: [
+                    "Understand container basics and ephemeral nature",
+                    "Master Docker volumes and persistent storage",
+                    "Learn Docker networking fundamentals",
+                    "Work with environment variables and configs",
+                    "Practice building custom images with Dockerfiles"
+                  ]
+                }
+              ],
+              resources: [
+                { type: "prompt", text: "Explain Docker concepts (images, containers, volumes, networks) with practical examples" },
+                { type: "prompt", text: "Help me write a Dockerfile for a Python Flask application with PostgreSQL" },
+                { type: "link", text: "Docker Documentation", url: "https://docs.docker.com/" }
+              ]
+            },
+            {
+              id: 3,
+              title: "Week 5-6: Python for Automation",
+              tasks: [
+                { text: "Python basics if rusty: data types, functions, classes, error handling", subtasks: [] },
+                { text: "Work with APIs using requests library", subtasks: [] },
+                { text: "Data manipulation with pandas", subtasks: [] },
+                { text: "Build automation scripts: file processing, API calls, data parsing", subtasks: [] },
+                { text: "Project: Create a script that pulls financial data from an API and generates a report", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Review my Python fundamentals - give me exercises on functions, classes, and error handling" },
+                { type: "prompt", text: "Teach me pandas for data manipulation - show me how to read, clean, and transform data" },
+                { type: "link", text: "Real Python", url: "https://realpython.com/" }
+              ]
+            },
+            {
+              id: 4,
+              title: "Week 7-8: SQL & Databases",
+              tasks: [
+                { text: "Run PostgreSQL in Docker container", subtasks: [] },
+                { text: "Practice SQL: SELECT, JOIN, GROUP BY, subqueries, CTEs", subtasks: [] },
+                { text: "Learn database design: normalization, indexes, constraints", subtasks: [] },
+                { text: "Connect Python to PostgreSQL (psycopg2 or SQLAlchemy)", subtasks: [] },
+                { text: "Project: Build a database to track your investment portfolio with Python scripts", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Teach me SQL from intermediate to advanced - give me practice problems" },
+                { type: "prompt", text: "Help me design a database schema for [your project idea]" },
+                { type: "link", text: "PostgreSQL Documentation", url: "https://www.postgresql.org/docs/" }
+              ]
+            }
+          ]
+        },
+        {
+          id: 2,
+          title: "Phase 2: Orchestration & Infrastructure (Months 3-4)",
+          weeks: [
+            {
+              id: 5,
+              title: "Week 9-10: Kubernetes Setup (k3s)",
+              tasks: [
+                { text: "Deploy k3s cluster (1 master node, 2 worker nodes)", subtasks: [] },
+                { text: "Learn Kubernetes basics: Pods, Deployments, Services, ConfigMaps, Secrets", subtasks: [] },
+                { text: "Deploy sample applications to your cluster", subtasks: [] },
+                { text: "Practice kubectl commands and troubleshooting", subtasks: [] },
+                { text: "Set up Ingress controller for external access", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Guide me through setting up a k3s cluster with 3 VMs step by step" },
+                { type: "prompt", text: "Explain Kubernetes architecture and core concepts with analogies" },
+                { type: "link", text: "Kubernetes Docs", url: "https://kubernetes.io/docs/" }
+              ]
+            },
+            {
+              id: 6,
+              title: "Week 11-12: Infrastructure as Code",
+              tasks: [
+                { text: "Learn Terraform basics: providers, resources, variables, outputs", subtasks: [] },
+                { text: "OR learn Ansible: playbooks, roles, inventory, modules", subtasks: [] },
+                { text: "Automate your VM deployments with IaC", subtasks: [] },
+                { text: "Version control everything in Git", subtasks: [] },
+                { text: "Project: Rebuild your entire lab from code", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Teach me Terraform - start with basic concepts and build up to managing infrastructure" },
+                { type: "prompt", text: "Help me write a Terraform configuration to deploy my k3s cluster" }
+              ]
+            },
+            {
+              id: 7,
+              title: "Week 13-14: Monitoring & Logging",
+              tasks: [
+                { text: "Deploy Prometheus for metrics collection", subtasks: [] },
+                { text: "Set up Grafana for visualization and dashboards", subtasks: [] },
+                { text: "Implement logging stack: ELK or Loki", subtasks: [] },
+                { text: "Create custom dashboards and alerts", subtasks: [] },
+                { text: "Monitor your cluster health and application performance", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Guide me through deploying Prometheus and Grafana on Kubernetes" },
+                { type: "prompt", text: "Show me how to create useful Grafana dashboards for monitoring my homelab" }
+              ]
+            },
+            {
+              id: 8,
+              title: "Week 15-16: Kubernetes Deep Dive",
+              tasks: [
+                { text: "Advanced concepts: StatefulSets, DaemonSets, Jobs, CronJobs", subtasks: [] },
+                { text: "Persistent storage: PersistentVolumes, PersistentVolumeClaims", subtasks: [] },
+                { text: "Network policies and service meshes (optional)", subtasks: [] },
+                { text: "Helm charts for application deployment", subtasks: [] },
+                { text: "Challenge: Deploy a complex multi-tier application", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Explain advanced Kubernetes patterns and when to use StatefulSets vs Deployments" }
+              ]
+            }
+          ]
+        },
+        {
+          id: 3,
+          title: "Phase 3: Data Engineering & Automation (Month 5)",
+          weeks: [
+            {
+              id: 9,
+              title: "Week 17-18: Data Pipeline Fundamentals",
+              tasks: [
+                { text: "Build your first ETL pipeline: Extract data from APIs", subtasks: [] },
+                { text: "Transform data using pandas (cleaning, aggregation, enrichment)", subtasks: [] },
+                { text: "Load data into PostgreSQL database", subtasks: [] },
+                { text: "Project: Financial data pipeline (stocks, crypto) or weather data collection", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Help me design a data pipeline to collect financial/crypto data and analyze it" },
+                { type: "prompt", text: "Show me best practices for ETL pipeline design and error handling" }
+              ]
+            },
+            {
+              id: 10,
+              title: "Week 19-20: Workflow Orchestration",
+              tasks: [
+                { text: "Deploy Apache Airflow or Prefect in Kubernetes", subtasks: [] },
+                { text: "Create DAGs (Directed Acyclic Graphs) to schedule pipelines", subtasks: [] },
+                { text: "Build dependencies between tasks", subtasks: [] },
+                { text: "Monitor pipeline execution and handle failures", subtasks: [] },
+                { text: "Project: Automated daily data collection and analysis pipeline", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Teach me Apache Airflow - explain DAGs and show me how to build a data pipeline" },
+                { type: "prompt", text: "Help me deploy Airflow on Kubernetes with proper configurations" }
+              ]
+            }
+          ]
+        },
+        {
+          id: 4,
+          title: "Phase 4: Security & Advanced AI (Month 6)",
+          weeks: [
+            {
+              id: 11,
+              title: "Week 21-22: Security Implementation",
+              tasks: [
+                { text: "Secrets management: Deploy HashiCorp Vault", subtasks: [] },
+                { text: "Kubernetes security: Network policies, RBAC, Pod Security Standards", subtasks: [] },
+                { text: "Container scanning: Trivy, Snyk", subtasks: [] },
+                { text: "Security monitoring: Set up SIEM-lite with log aggregation and alerts", subtasks: [] },
+                { text: "Leverage your CISSP: Apply security controls from NIST framework", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Guide me through implementing HashiCorp Vault for secrets management" },
+                { type: "prompt", text: "Show me how to implement security best practices in my Kubernetes cluster" }
+              ]
+            },
+            {
+              id: 12,
+              title: "Week 23: CI/CD Pipeline",
+              tasks: [
+                { text: "Set up GitLab or Jenkins in your cluster", subtasks: [] },
+                { text: "Create CI/CD pipeline: build, test, security scan, deploy", subtasks: [] },
+                { text: "Integrate with GitHub", subtasks: [] },
+                { text: "Automated testing and deployment to Kubernetes", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Help me build a complete CI/CD pipeline with security scanning and automated deployments" }
+              ]
+            },
+            {
+              id: 13,
+              title: "Week 24: Agentic AI Integration",
+              tasks: [
+                { text: "Build AI agents using Claude API (or other LLM APIs)", subtasks: [] },
+                { text: "Agent capabilities: Monitor logs, detect anomalies, suggest optimizations", subtasks: [] },
+                { text: "Automated responses: Scale services, restart failed pods, generate reports", subtasks: [] },
+                { text: "Stretch Goal: Multi-agent system managing different aspects of your lab", subtasks: [] }
+              ],
+              resources: [
+                { type: "prompt", text: "Design an AI agent architecture that can monitor and manage my Kubernetes cluster" },
+                { type: "prompt", text: "Help me build a Python script that uses Claude API to analyze logs and take action" }
+              ]
+            },
+            {
+              id: 14,
+              title: "Week 25-26: Portfolio Polish & Job Search",
+              tasks: [
+                { text: "Create comprehensive README files for all projects", subtasks: [] },
+                { text: "Build architecture diagrams showing your infrastructure", subtasks: [] },
+                { text: "Record demo videos of key projects", subtasks: [] },
+                { text: "Update LinkedIn with new skills and projects", subtasks: [] },
+                { text: "Start applying to positions", subtasks: [] }
+              ],
+              resources: [
+                { type: "link", text: "Pramp - Free Mock Interviews", url: "https://www.pramp.com/" },
+                { type: "link", text: "Interviewing.io", url: "https://interviewing.io/" }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    function RoadmapTracker() {
+      const [completedTasks, setCompletedTasks] = useState({});
+      const [expandedWeeks, setExpandedWeeks] = useState({});
+      const [expandedTasks, setExpandedTasks] = useState({});
+      const [toast, setToast] = useState(null);
+      const [loading, setLoading] = useState(true);
+
+      // Fetch initial progress from API on mount
+      useEffect(() => {
+        fetch('/api/tracker/progress')
+          .then(res => res.json())
+          .then(data => {
+            setCompletedTasks(data);
+            setLoading(false);
+          })
+          .catch(err => {
+            console.error('Failed to load progress:', err);
+            setLoading(false);
+            showToast('Failed to load progress from server');
+          });
+      }, []);
+
+      const toggleTask = (phaseId, weekId, taskIndex) => {
+        const key = `${phaseId}-${weekId}-${taskIndex}`;
+        const newValue = !completedTasks[key];
+        
+        // Optimistically update UI
+        setCompletedTasks(prev => ({
+          ...prev,
+          [key]: newValue
+        }));
+        
+        // Save to API
+        fetch('/api/tracker/progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            task_key: key,
+            completed: newValue
+          })
+        }).catch(err => {
+          console.error('Failed to save:', err);
+          showToast('Failed to save - check console');
+        });
+        
+        showToast(newValue ? 'Task completed! 🚀' : 'Task unchecked');
+      };
+
+      const toggleSubtask = (phaseId, weekId, taskIndex, subtaskIndex) => {
+        const key = `${phaseId}-${weekId}-${taskIndex}-${subtaskIndex}`;
+        const newValue = !completedTasks[key];
+        
+        // Optimistically update UI
+        setCompletedTasks(prev => ({
+          ...prev,
+          [key]: newValue
+        }));
+        
+        // Save to API
+        fetch('/api/tracker/progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            task_key: key,
+            completed: newValue
+          })
+        }).catch(err => {
+          console.error('Failed to save:', err);
+          showToast('Failed to save - check console');
+        });
+        
+        showToast(newValue ? 'Subtask completed! ✓' : 'Subtask unchecked');
+      };
+
+      const toggleWeek = (weekId) => {
+        setExpandedWeeks(prev => ({
+          ...prev,
+          [weekId]: !prev[weekId]
+        }));
+      };
+
+      const toggleTaskExpand = (phaseId, weekId, taskIndex) => {
+        const key = `${phaseId}-${weekId}-${taskIndex}`;
+        setExpandedTasks(prev => ({
+          ...prev,
+          [key]: !prev[key]
+        }));
+      };
+
+      const exportProgress = () => {
+        const dataStr = JSON.stringify(completedTasks, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `roadmap-progress-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        showToast('Progress exported successfully!');
+      };
+
+      const importProgress = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              const imported = JSON.parse(e.target.result);
+              
+              // Send to bulk import API
+              fetch('/api/tracker/progress/bulk', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(imported)
+              })
+              .then(res => res.json())
+              .then(() => {
+                setCompletedTasks(imported);
+                showToast('Progress imported successfully!');
+              })
+              .catch(err => {
+                console.error('Failed to import:', err);
+                showToast('Error importing to server');
+              });
+            } catch (error) {
+              showToast('Error importing file. Please check the format.');
+            }
+          };
+          reader.readAsText(file);
+        }
+      };
+
+      const resetProgress = () => {
+        if (window.confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+          setCompletedTasks({});
+          showToast('Progress reset');
+        }
+      };
+
+      const showToast = (message) => {
+        setToast(message);
+        setTimeout(() => setToast(null), 3000);
+      };
+
+      const getTaskProgress = (phase, week, task, taskIndex) => {
+        if (!task.subtasks || task.subtasks.length === 0) return null;
+        
+        const completedCount = task.subtasks.filter((_, idx) => 
+          completedTasks[`${phase.id}-${week.id}-${taskIndex}-${idx}`]
+        ).length;
+        
+        return { completed: completedCount, total: task.subtasks.length };
+      };
+
+      const isTaskCompleted = (phase, week, task, taskIndex) => {
+        const taskKey = `${phase.id}-${week.id}-${taskIndex}`;
+        
+        if (!task.subtasks || task.subtasks.length === 0) {
+          return completedTasks[taskKey];
+        }
+        
+        const allSubtasksCompleted = task.subtasks.every((_, idx) => 
+          completedTasks[`${phase.id}-${week.id}-${taskIndex}-${idx}`]
+        );
+        
+        return allSubtasksCompleted;
+      };
+
+      const calculateProgress = () => {
+        let total = 0;
+        let completed = 0;
+        roadmapData.phases.forEach(phase => {
+          phase.weeks.forEach(week => {
+            week.tasks.forEach((task, idx) => {
+              if (!task.subtasks || task.subtasks.length === 0) {
+                total++;
+                if (completedTasks[`${phase.id}-${week.id}-${idx}`]) {
+                  completed++;
+                }
+              } else {
+                total += task.subtasks.length;
+                task.subtasks.forEach((_, subIdx) => {
+                  if (completedTasks[`${phase.id}-${week.id}-${idx}-${subIdx}`]) {
+                    completed++;
+                  }
+                });
+              }
+            });
+          });
+        });
+        return { total, completed, percentage: total > 0 ? Math.round((completed / total) * 100) : 0 };
+      };
+
+      const getPhaseProgress = (phase) => {
+        let total = 0;
+        let completed = 0;
+        phase.weeks.forEach(week => {
+          week.tasks.forEach((task, idx) => {
+            if (!task.subtasks || task.subtasks.length === 0) {
+              total++;
+              if (completedTasks[`${phase.id}-${week.id}-${idx}`]) {
+                completed++;
+              }
+            } else {
+              total += task.subtasks.length;
+              task.subtasks.forEach((_, subIdx) => {
+                if (completedTasks[`${phase.id}-${week.id}-${idx}-${subIdx}`]) {
+                  completed++;
+                }
+              });
+            }
+          });
+        });
+        return { completed, total };
+      };
+
+      const progress = calculateProgress();
+      // Set your actual start date here - currently defaults to today
+      const startDate = new Date('2024-11-01'); // Update this to your actual start date
+      const daysElapsed = Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24));
+
+      return (
+        <div className="app-container">
+          {loading ? (
+            <div style={{textAlign: 'center', padding: '4rem'}}>
+              <div style={{fontSize: '2rem', color: 'var(--accent-primary)'}}>Loading progress...</div>
+            </div>
+          ) : (
+            <>
+              <div className="header">
+                <h1>Tech Mastery Roadmap</h1>
+                <p className="subtitle">Your path to six figures</p>
+              </div>
+
+          <div className="progress-overview">
+            <div className="stat-card">
+              <div className="stat-value">{progress.percentage}%</div>
+              <div className="stat-label">Overall Progress</div>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: `${progress.percentage}%` }}></div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">{progress.completed}/{progress.total}</div>
+              <div className="stat-label">Items Completed</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">{Math.floor(daysElapsed / 7)}</div>
+              <div className="stat-label">Weeks In Progress</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">{26 - Math.floor(daysElapsed / 7)}</div>
+              <div className="stat-label">Weeks Remaining</div>
+            </div>
+          </div>
+
+          <div className="controls">
+            <button onClick={exportProgress}>💾 Export Progress</button>
+            <label className="file-label">
+              📥 Import Progress
+              <input type="file" accept=".json" onChange={importProgress} />
+            </label>
+            <button onClick={resetProgress} className="secondary">🔄 Reset Progress</button>
+          </div>
+
+          {roadmapData.phases.map(phase => {
+            const phaseProgress = getPhaseProgress(phase);
+            return (
+              <div key={phase.id} className="phase">
+                <div className="phase-header">
+                  <h2 className="phase-title">{phase.title}</h2>
+                  <span className="phase-progress">
+                    {phaseProgress.completed}/{phaseProgress.total}
+                  </span>
+                </div>
+
+                {phase.weeks.map(week => {
+                  const isExpanded = expandedWeeks[week.id];
+                  return (
+                    <div key={week.id} className="week">
+                      <div className="week-header" onClick={() => toggleWeek(week.id)}>
+                        <span className="week-title">{week.title}</span>
+                        <span className={`expand-icon ${isExpanded ? 'expanded' : ''}`}>▶</span>
+                      </div>
+
+                      {isExpanded && (
+                        <div className="week-content">
+                          {week.tasks.map((task, idx) => {
+                            const taskKey = `${phase.id}-${week.id}-${idx}`;
+                            const isExpanded = expandedTasks[taskKey];
+                            const hasSubtasks = task.subtasks && task.subtasks.length > 0;
+                            const taskProgress = getTaskProgress(phase, week, task, idx);
+                            const isCompleted = isTaskCompleted(phase, week, task, idx);
+                            const isPartial = hasSubtasks && taskProgress && taskProgress.completed > 0 && taskProgress.completed < taskProgress.total;
+
+                            return (
+                              <div key={idx} className={`task ${isCompleted ? 'completed' : ''}`}>
+                                <div className="task-main">
+                                  <div
+                                    className={`task-checkbox ${isCompleted ? 'completed' : ''} ${isPartial ? 'partial' : ''}`}
+                                    onClick={() => hasSubtasks ? null : toggleTask(phase.id, week.id, idx)}
+                                  />
+                                  <div className="task-content">
+                                    <div 
+                                      className="task-header"
+                                      onClick={() => hasSubtasks && toggleTaskExpand(phase.id, week.id, idx)}
+                                    >
+                                      <div className="task-text">{task.text}</div>
+                                      {hasSubtasks && (
+                                        <>
+                                          <span className="task-progress">
+                                            {taskProgress.completed}/{taskProgress.total}
+                                          </span>
+                                          <span className={`task-expand-icon ${isExpanded ? 'expanded' : ''}`}>▶</span>
+                                        </>
+                                      )}
+                                    </div>
+
+                                    {hasSubtasks && isExpanded && (
+                                      <div className="subtasks">
+                                        {task.subtasks.map((subtask, subIdx) => {
+                                          const subtaskKey = `${phase.id}-${week.id}-${idx}-${subIdx}`;
+                                          const isSubtaskCompleted = completedTasks[subtaskKey];
+                                          return (
+                                            <div key={subIdx} className={`subtask ${isSubtaskCompleted ? 'completed' : ''}`}>
+                                              <div
+                                                className={`subtask-checkbox ${isSubtaskCompleted ? 'completed' : ''}`}
+                                                onClick={() => toggleSubtask(phase.id, week.id, idx, subIdx)}
+                                              />
+                                              <div className="subtask-text">{subtask}</div>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+
+                          {week.resources && week.resources.length > 0 && (
+                            <div className="resources">
+                              {week.resources.map((resource, idx) => (
+                                <div key={idx} className="resource-item">
+                                  <span className="resource-icon">
+                                    {resource.type === 'prompt' ? '💬' : '🔗'}
+                                  </span>
+                                  {resource.type === 'prompt' ? (
+                                    <span className="prompt-text">"{resource.text}"</span>
+                                  ) : (
+                                    <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                                      {resource.text}
+                                    </a>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+
+          {toast && <div className="toast">{toast}</div>}
+          </>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.render(<RoadmapTracker />, document.getElementById('root'));
+  </script>
+</body>
+</html>

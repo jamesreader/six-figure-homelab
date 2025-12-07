@@ -24,9 +24,8 @@ spec:
         {{ end -}}
     push:
       branch: main
-      options:
-        secretRef:
-          name: flux-system
+    secretRef:
+      name: flux-system
   update:
     path: ./apps/dashboard/base
     strategy: Setters

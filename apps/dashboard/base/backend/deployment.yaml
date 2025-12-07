@@ -19,13 +19,5 @@ spec:
         ports:
         - containerPort: 5000
         env:
-        - name: DB_HOST
-          value: postgres
-        - name: DB_PORT
-          value: "5432"
-        - name: DB_NAME
-          value: dashboard_db
-        - name: DB_USER
-          value: dashboard_user
-        - name: DB_PASSWORD
-          value: dashboard_pass
+        - name: DATABASE_URL
+          value: postgresql://dashboard_user:dashboard_pass@postgres:5432/dashboard_db

@@ -42,6 +42,7 @@ jobs:
           tags: |
             jasmesreader/dashboard-backend:latest
             jasmesreader/dashboard-backend:${{ github.sha }}
+            jasmesreader/dashboard-backend:build-${{ github.run_number }}
 
   deploy:
     needs: build-and-push

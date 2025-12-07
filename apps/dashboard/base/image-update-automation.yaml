@@ -19,21 +19,8 @@ spec:
       messageTemplate: |
         Automated image update
         
-        Automation name: {{ .AutomationObject }}
-        
-        Files:
-        {{ range $filename, $_ := .Changed.Files -}}
-        - {{ $filename }}
-        {{ end -}}
-        
-        Objects:
-        {{ range $resource, $_ := .Changed.Objects -}}
-        - {{ $resource.Kind }} {{ $resource.Name }}
-        {{ end -}}
-        
-        Images:
-        {{ range .Changed.Images -}}
-        - {{.}}
+        {{ range .Changed.Changes -}}
+        {{ .OldValue }} -> {{ .NewValue }}
         {{ end -}}
     push:
       branch: main

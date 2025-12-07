@@ -10,5 +10,5 @@ spec:
     numerical:
       order: asc
   filterTags:
-    pattern: '^build-[0-9]+$'
+    pattern: '^build-([0-9]+)$'
     extract: '$0'

@@ -14,13 +14,13 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: backend
+            name: dashboard-backend
             port:
               number: 5000
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: frontend
+            name: dashboard-frontend
             port:
               number: 80

@@ -32,6 +32,7 @@ jobs:
           tags: |
             jasmesreader/dashboard-frontend:latest
             jasmesreader/dashboard-frontend:${{ github.sha }}
+            jasmesreader/dashboard-frontend:build-${{ github.run_number }}
       
       - name: Build and push backend
         uses: docker/build-push-action@v5

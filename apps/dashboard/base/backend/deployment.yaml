@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-backend
+  namespace: dashboard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dashboard-backend
+  template:
+    metadata:
+      labels:
+        app: dashboard-backend
+    spec:
+      containers:
+      - name: backend
+        image: jasmesreader/dashboard-backend:latest # {"$imagepolicy": "flux-system:dashboard-backend"}
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_HOST
+          value: postgres
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: dashboard_db
+        - name: DB_USER
+          value: dashboard_user
+        - name: DB_PASSWORD
+          value: dashboard_pass

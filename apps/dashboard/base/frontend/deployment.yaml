@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-frontend
+  namespace: dashboard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dashboard-frontend
+  template:
+    metadata:
+      labels:
+        app: dashboard-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: jasmesreader/dashboard-frontend:latest # {"$imagepolicy": "flux-system:dashboard-frontend"}
+        ports:
+        - containerPort: 80

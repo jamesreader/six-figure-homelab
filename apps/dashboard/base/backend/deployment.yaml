@@ -15,9 +15,15 @@ spec:
     spec:
       containers:
       - name: backend
-        image: jasmesreader/dashboard-backend:latest # {"$imagepolicy": "flux-system:dashboard-backend"}
+        image: jasmesreader/dashboard-backend:build-auth
         ports:
         - containerPort: 5000
         env:
         - name: DATABASE_URL
           value: postgresql://dashboard_user:dashboard_pass@postgres:5432/dashboard_db
+        - name: JWT_SECRET_KEY
+          value: "gfvey4edTN95KoHaG_nh1cit8woF-V4lcjX12OSM1a8"
+        - name: JWT_ALGORITHM
+          value: "HS256"
+        - name: JWT_EXPIRATION_HOURS
+          value: "24"

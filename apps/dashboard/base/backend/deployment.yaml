@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
       - name: backend
-        image: jasmesreader/dashboard-backend:build-auth
+        image: jasmesreader/dashboard-backend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:

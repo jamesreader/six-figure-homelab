@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: jasmesreader/dashboard-frontend:latest # {"$imagepolicy": "flux-system:dashboard-frontend"}
+        image: jasmesreader/dashboard-frontend:build-23 # {"$imagepolicy": "flux-system:dashboard-frontend"}
         ports:
         - containerPort: 80
